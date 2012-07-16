@@ -22,7 +22,6 @@ Features
   devices with the rotation. (*Note:* this happens independently of any
   external displays, in contrast with the annoying Windows tablet software...)
 * Enable / disable the finger touch (for when you're writing)
-* Enable / disable power saving features for the tablet
 * Map tablet events to the internal display (useful when an external monitor
   is attached which has a different resolution than the internal)
 * Takes care of some unexpected nuisances, like the fact that the Lenovo
@@ -33,14 +32,16 @@ Features
 Configuration / Setup / Usage
 -----------------------------
 
-I find it convenient to map the tablet function keys to invocations of the
-script.  To put the computer into tablet mode (for when I'm writing notes), I
-invert the screen and disable the touch:
+I find it convenient to map some of the tablet's extra buttons to invocations
+of this script.  Other ideas would be to automatically run the script using
+acpid, or maybe udev events.  Regardless, to put the computer into tablet mode
+(for when writing notes), one can invert the screen and disable the touch with
+the following command:
 
 	tabletop -iT
 
-And to put it back into normal mode, I set the screen to its normal
-orientation, and turn the touch back on.
+To undo the above, (setting the screen to its normal orientation and turning
+the touch back on) one can use:
 
 	tabletop -It
 
@@ -49,6 +50,7 @@ issues with leaving the touch on while writing, then remove the `t` and `T`
 options above.
 
 Run `tabletop -h` to see the full list of options.
+
 
 
 Supported Hardware
@@ -92,7 +94,7 @@ Run `toggledisplay -h` to see the full list of options.
 Caveats
 -------
 
-The script assumes that the internal display is named `LVDS1`, although this
+Both scripts assume that the internal display is named `LVDS1`, although this
 can be easily changed.
 
 
