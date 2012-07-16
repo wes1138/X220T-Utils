@@ -1,0 +1,29 @@
+X220 Tablet Utility Script
+==========================
+
+Synopsis
+--------
+
+A simple script to automate some of the basic tablet PC necessities.
+
+Features
+--------
+
+* Rotate or invert the internal display, and synchronize the tablet input
+  devices with the rotation. (*Note:* this happens independently of any
+  external displays, in contrast with the annoying Windows tablet software...)
+* Enable / disable the finger touch (for when you're writing)
+* Enable / disable power saving features for the tablet
+* Map tablet events to the internal display (useful when an external monitor
+  is attached which has a different resolution than the internal)
+* Takes care of some unexpected nuisances, like the fact that the Lenovo
+  trackpoint is sensitive enough to respond to the pressure of you writing on
+  the tablet surface.
+
+Supported Hardware
+------------------
+
+It works for the X220T, but it might be useful for other tablet PC's as well.
+
+<!-- vim:ff=unix:ft=markdown:sw=4:foldmethod=marker:tw=78
+-->
