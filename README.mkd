@@ -15,6 +15,25 @@ X220T, for example disabling the trackpoint when in tablet mode.
 help with common tablet PC tasks, like rotating the internal display and
 keeping the tablet input devices synchronized with the change.
 
+Usage
+-----
+
+
+    usage: tabletop [OPTIONS]
+
+    OPTIONS:
+       -h           Show this message
+       -i           Invert the internal display
+       -I           Set internal display to normal orientation
+       -r           Rotate internal display 90 degrees, cc
+       -t           Enable finger touch (does not affect stylus)
+       -T           Disable finger touch (does not affect stylus)
+       -m           Map the tablet events to the internal display.  This can be
+                    useful if an external display is connected which has a
+                    different size than the screen you're writing on.
+       -v           Verbose (print more stuff)
+
+
 Features
 --------
 
@@ -29,8 +48,8 @@ Features
   the tablet surface.
 
 
-Configuration / Setup / Usage
------------------------------
+Examples / Configuration
+------------------------
 
 I find it convenient to map some of the tablet's extra buttons to invocations
 of this script.  Other ideas would be to automatically run the script using
@@ -49,9 +68,6 @@ If you use the touch more than you write with the stylus, or if you have no
 issues with leaving the touch on while writing, then remove the `t` and `T`
 options above.
 
-Run `tabletop -h` to see the full list of options.
-
-
 
 Supported Hardware
 ------------------
@@ -68,6 +84,22 @@ external displays.  It is just a wrapper for `xrandr` that provides a small
 subset of the functionality for the benefit of having a less cumbersome
 interface.
 
+Usage
+-----
+
+    usage: toggledisplay [OPTIONS] [EXTERNAL MONITOR]
+
+    OPTIONS:
+       -h             Show this message
+       -t             Toggle internal / external monitor
+       -m             Attempt to mirror displays
+       -d             Disconnect all external monitors, enable internal
+       -e [monitors]  Use [monitors] as the list of external displays for
+                      the operation
+
+    NOTE: all options are mutually exlusive, except for -e
+
+
 Features
 --------
 
@@ -76,8 +108,8 @@ Features
 * Mirrors displays
 * A `reset` option to disconnect all externals and enable the internal
 
-Usage / Examples
-----------------
+Examples
+--------
 
 * To mirror the internal with any external displays, run:
 
@@ -87,8 +119,6 @@ Usage / Examples
 
 	toggledisplay -t -e 'HDMI1 VGA1'
 
-
-Run `toggledisplay -h` to see the full list of options.
 
 
 Caveats

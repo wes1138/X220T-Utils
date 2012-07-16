@@ -41,8 +41,8 @@ tabletop_usage()
 cat << EOF
 usage: tabletop [OPTIONS]
 
-Modifies various tablet-related settings, including power management,
-display orientation, and controls for toggling the touchscreen, pen, etc.
+Modifies various tablet-related settings, including display orientation, and
+controls for toggling the touchscreen, pen, etc.
 
 OPTIONS:
    -h           Show this message

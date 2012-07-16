@@ -3,10 +3,9 @@
 toggledisplay_usage()
 {
 cat << EOF
-usage: tabletop [OPTIONS] [EXTERNAL MONITOR]
+usage: toggledisplay [OPTIONS] [EXTERNAL MONITOR]
 
-Modifies various tablet-related settings, including power management,
-display orientation, and controls for toggling the touchscreen, pen, etc.
+Provides a simple interface for toggling / mirroring external displays.
 
 OPTIONS:
    -h             Show this message
