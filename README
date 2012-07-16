@@ -1,8 +1,15 @@
-X220 Tablet Utility Script
-==========================
+X220 Tablet Utility Scripts
+===========================
 
-Synopsis
+Overview
 --------
+
+A few scripts that are useful for tablet PC's, especially when making
+presentations or lectures.  They also have special considerations for the
+X220T, for example disabling the trackpoint when in tablet mode.
+
+`tabletop` (*Tablet Op*tions)
+=============================
 
 `tabletop` is a simple script to control some basic **Tablet Op**tions, and
 help with common tablet PC tasks, like rotating the internal display and
@@ -23,8 +30,8 @@ Features
   the tablet surface.
 
 
-Configuration / Setup
----------------------
+Configuration / Setup / Usage
+-----------------------------
 
 I find it convenient to map the tablet function keys to invocations of the
 script.  To put the computer into tablet mode (for when I'm writing notes), I
@@ -41,12 +48,54 @@ If you use the touch more than you write with the stylus, or if you have no
 issues with leaving the touch on while writing, then remove the `t` and `T`
 options above.
 
+Run `tabletop -h` to see the full list of options.
+
 
 Supported Hardware
 ------------------
 
 It has only been tested on the X220T, but it is conjectured that it would work
 on most other tablet PC's as well (with or without trackpoint).
+
+
+`toggledisplay`
+===============
+
+`toggledisplay` is a general script for (surprise!) toggling internal and
+external displays.  It is just a wrapper for `xrandr` that provides a small
+subset of the functionality for the benefit of having a less cumbersome
+interface.
+
+Features
+--------
+
+* Gathers the list of attached monitors
+* Toggles internal vs. external monitors
+* Mirrors displays
+* A `reset` option to disconnect all externals and enable the internal
+
+Usage / Examples
+----------------
+
+* To mirror the internal with any external displays, run:
+
+	toggledisplay -m
+
+* To toggle two specific monitors, HDMI1 and VGA1 with the internal display:
+
+	toggledisplay -t -e 'HDMI1 VGA1'
+
+
+Run `toggledisplay -h` to see the full list of options.
+
+
+Caveats
+-------
+
+The script assumes that the internal display is named `LVDS1`, although this
+can be easily changed.
+
+
 
 <!-- vim:ff=unix:ft=markdown:sw=4:foldmethod=marker:tw=78
 -->

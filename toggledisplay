@@ -1,0 +1,124 @@
+#!/bin/bash
+
+toggledisplay_usage()
+{
+cat << EOF
+usage: tabletop [OPTIONS] [EXTERNAL MONITOR]
+
+Modifies various tablet-related settings, including power management,
+display orientation, and controls for toggling the touchscreen, pen, etc.
+
+OPTIONS:
+   -h             Show this message
+   -t             Toggle internal / external monitor
+   -m             Attempt to mirror displays
+   -d             Disconnect all external monitors, enable internal
+   -e [monitors]  Use [monitors] as the list of external displays for
+                  the operation
+
+NOTE: all options are mutually exlusive, except for -e
+
+EXAMPLES:
+
+* to toggle two monitors, HDMI1 and VGA1 with the internal display:
+
+	toggledisplay.sh -t -e "HDMI1 VGA1"
+
+* in typical situations where there is only one external display and
+  one internal display, the following will suffice to toggle them:
+
+	toggledisplay.sh -t
+
+EOF
+}
+
+while getopts "tmde:" OPTION
+do
+	case $OPTION in
+	h)
+		toggledisplay_usage
+		exit 0
+		;;
+	t)
+		toggle=1
+		;;
+	m)
+		mirror=1
+		;;
+	d)
+		discon=1
+		;;
+	e)
+		externs=$OPTARG
+		;;
+	?)
+		toggledisplay_usage
+		exit 0
+		;;
+	esac
+done
+
+if [[ $OPTIND == 1 ]]
+then # default to toggle.
+	toggle=1
+fi
+
+# default internal display:
+int="LVDS1"
+# TODO: make this configurable?
+
+# grab the current state of our monitors
+xrr=$(xrandr -q)
+
+# get the list of external monitors if it has not been provided.
+if [[ -z $externs ]]; then
+	externs=$(echo "$xrr" | awk '/\<connected\>/ {print $1}')
+	# remove the internal display from the list:
+	externs=${externs//$int/}
+fi
+
+# if there are no external displays found, then there isn't much to do,
+# so we should bail out here.
+if [[ -z ${externs// /} ]]; then
+	echo "No external displays found."
+	exit 1;
+fi
+
+# TODO: test this.
+# list of commands:
+cmds=( --off --auto )
+if [[ $toggle == 1 ]]; then
+	# figure out if the internal is on, and set the command based on that.
+	[[ echo "$xrr" | grep "$int" | grep -q "+" ]] && k=1 || k=0
+
+	xrcmd=""
+	for ext in $externs; do
+		xrcmd="$xrcmd --output $ext ${cmds[$k]}"
+	done
+	xrandr "$xrcmd --output $int ${cmds[($k+1)%2]}"
+	# return with status of last operation:
+	exit
+fi
+
+# we could do something fancy for mirror, like computing the largest mode that
+# is compatible with both displays; but for now, we will just try to use the
+# "--same-as" option for xrandr.
+
+if [[ $mirror == 1 ]]; then
+	xrcmd=""
+	for ext in $externs; do
+		xrcmd="$xrcmd --output $ext --auto"
+	done
+	# because we are lazy, just set the internal to mirror the last
+	# specified external monitor:
+	xrandr "$xrcmd --output $int --same-as $ext"
+	exit
+fi
+
+if [[ $discon == 1 ]]; then
+	xrcmd=""
+	for ext in $externs; do
+		xrcmd="$xrcmd --output $ext --off"
+	done
+	xrandr "$xrcmd --output $int --auto"
+fi
