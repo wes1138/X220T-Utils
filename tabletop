@@ -85,16 +85,17 @@ OPTIONS:
                 useful if an external display is connected which has a
                 different size than the screen you're writing on.
    -v           Verbose (print more stuff)
-   -G           G, as in GTFO.  This option tries to turn off any external
-                monitors that are connected, and switch the internal monitor
-                back to its normal default state.
+   -G           G, as in GTFO of tablet mode.  This option tries to turn off
+                any external monitors that are connected, and switch the
+                internal monitor back to its normal default state.
 
 EXAMPLES:
-   If during a lecture, you have an external display that you would like
-   to write on, you could invert your internal display (to avoid having to
-   physically rotate your computer), disable the touchscreen (so that your
-   palm does not register events when you write) and disable powersaving so
-   that the tablet stays more responsive, all with the following command:
+   If during a lecture or presentation you have an external display that you
+   would like to write on, you could invert your internal display (to avoid
+   having to physically rotate your computer), disable the touchscreen (so
+   that your palm does not register events when you write) and disable
+   powersaving so that the tablet stays more responsive, all with the
+   following command:
 
 		   tabletop -iTP
 

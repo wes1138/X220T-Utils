@@ -4,7 +4,9 @@ X220 Tablet Utility Script
 Synopsis
 --------
 
-A simple script to automate some of the basic tablet PC necessities.
+`tabletop` is a simple script to control some basic **Tablet Op**tions, and
+help with common tablet PC tasks, like rotating the internal display and
+keeping the tablet input devices synchronized with the change.
 
 Features
 --------
@@ -20,10 +22,31 @@ Features
   trackpoint is sensitive enough to respond to the pressure of you writing on
   the tablet surface.
 
+
+Configuration / Setup
+---------------------
+
+I find it convenient to map the tablet function keys to invocations of the
+script.  To put the computer into tablet mode (for when I'm writing notes), I
+invert the screen and disable the touch:
+
+	tabletop -iT
+
+And to put it back into normal mode, I set the screen to its normal
+orientation, and turn the touch back on.
+
+	tabletop -It
+
+If you use the touch more than you write with the stylus, or if you have no
+issues with leaving the touch on while writing, then remove the `t` and `T`
+options above.
+
+
 Supported Hardware
 ------------------
 
-It works for the X220T, but it might be useful for other tablet PC's as well.
+It has only been tested on the X220T, but it is conjectured that it would work
+on most other tablet PC's as well (with or without trackpoint).
 
 <!-- vim:ff=unix:ft=markdown:sw=4:foldmethod=marker:tw=78
 -->
