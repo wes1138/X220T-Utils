@@ -83,7 +83,8 @@ if [[ -z ${externs// /} ]]; then
 	exit 1;
 fi
 
-# TODO: test this.
+# TODO: more testing.
+
 # list of commands:
 cmds=( --off --auto )
 if [[ $toggle == 1 ]]; then
@@ -101,16 +102,17 @@ fi
 
 # we could do something fancy for mirror, like computing the largest mode that
 # is compatible with both displays; but for now, we will just try to use the
-# "--same-as" option for xrandr.
+# "--same-as" option for xrandr, and hope for the best.
 
 if [[ $mirror == 1 ]]; then
 	xrcmd=""
 	for ext in $externs; do
 		xrcmd="$xrcmd --output $ext --auto"
 	done
-	# because we are lazy, just set the internal to mirror the last
-	# specified external monitor:
 	xrandr "$xrcmd --output $int --same-as $ext"
+	# TODO: we have just set the internal to mirror the last
+	# specified external monitor, but there are probably better choices.
+	# I guess this could be configurable, as well.
 	exit
 fi
 
