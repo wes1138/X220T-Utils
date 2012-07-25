@@ -89,7 +89,7 @@ fi
 cmds=( --off --auto )
 if [[ $toggle == 1 ]]; then
 	# figure out if the internal is on, and set the command based on that.
-	[[ echo "$xrr" | grep "$int" | grep -q "+" ]] && k=1 || k=0
+	( echo "$xrr" | grep "$int" | grep -q "+" ) && k=1 || k=0
 
 	xrcmd=""
 	for ext in $externs; do
