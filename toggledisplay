@@ -21,17 +21,17 @@ EXAMPLES:
 
 * to toggle two monitors, HDMI1 and VGA1 with the internal display:
 
-	toggledisplay.sh -t -e "HDMI1 VGA1"
+	toggledisplay -t -e "HDMI1 VGA1"
 
 * in typical situations where there is only one external display and
   one internal display, the following will suffice to toggle them:
 
-	toggledisplay.sh -t
+	toggledisplay -t
 
 EOF
 }
 
-while getopts "tmde:" OPTION
+while getopts "htmde:" OPTION
 do
 	case $OPTION in
 	h)
@@ -95,7 +95,7 @@ if [[ $toggle == 1 ]]; then
 	for ext in $externs; do
 		xrcmd="$xrcmd --output $ext ${cmds[$k]}"
 	done
-	xrandr "$xrcmd --output $int ${cmds[($k+1)%2]}"
+	xrandr $xrcmd --output $int ${cmds[($k+1)%2]}
 	# return with status of last operation:
 	exit
 fi
@@ -109,7 +109,7 @@ if [[ $mirror == 1 ]]; then
 	for ext in $externs; do
 		xrcmd="$xrcmd --output $ext --auto"
 	done
-	xrandr "$xrcmd --output $int --same-as $ext"
+	xrandr $xrcmd --output $int --same-as $ext
 	# TODO: we have just set the internal to mirror the last
 	# specified external monitor, but there are probably better choices.
 	# I guess this could be configurable, as well.
@@ -121,5 +121,5 @@ if [[ $discon == 1 ]]; then
 	for ext in $externs; do
 		xrcmd="$xrcmd --output $ext --off"
 	done
-	xrandr "$xrcmd --output $int --auto"
+	xrandr $xrcmd --output $int --auto
 fi
