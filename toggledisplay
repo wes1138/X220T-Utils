@@ -16,6 +16,7 @@ OPTIONS:
                   the operation
 
 NOTE: all options are mutually exlusive, except for -e
+NOTE: This script assumes that the internal display is named LVDS1
 
 EXAMPLES:
 
@@ -23,8 +24,7 @@ EXAMPLES:
 
 	toggledisplay -t -e "HDMI1 VGA1"
 
-* in typical situations where there is only one external display and
-  one internal display, the following will suffice to toggle them:
+* to toggle all connected external displays with the internal display:
 
 	toggledisplay -t
 
