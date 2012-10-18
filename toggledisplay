@@ -113,6 +113,9 @@ if [[ $mirror == 1 ]]; then
 	# TODO: we have just set the internal to mirror the last
 	# specified external monitor, but there are probably better choices.
 	# I guess this could be configurable, as well.
+	# TODO: the --same-as option refers only to the *position*, but not to the
+	# size.  To actually mirror the displays you must examine the available
+	# modes, find a match, and then set them explicitly.
 	exit
 fi
 
