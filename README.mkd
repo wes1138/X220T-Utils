@@ -51,23 +51,15 @@ Features
 Examples / Configuration
 ------------------------
 
-I find it convenient to map some of the tablet's extra buttons to invocations
-of this script.  Other ideas would be to automatically run the script using
-acpid, or maybe udev events.  Regardless, to put the computer into tablet mode
-(for when writing notes), one can invert the screen and disable the touch with
-the following command:
+To put the computer into tablet mode (for when writing notes), one can invert
+the screen and disable the touch with the following command:
 
 	tabletop -iT
 
-To undo the above, (setting the screen to its normal orientation and turning
-the touch back on) one can use:
+To undo the above (setting the screen to its normal orientation and turning
+the touch back on):
 
 	tabletop -It
-
-If you use the touch more than you write with the stylus, or if you have no
-issues with leaving the touch on while writing, then remove the `t` and `T`
-options above.
-
 
 Supported Hardware
 ------------------
@@ -79,20 +71,19 @@ on most other tablet PC's as well (with or without trackpoint).
 `toggledisplay`
 ===============
 
-`toggledisplay` is a general script for (surprise!) toggling internal and
-external displays.  It is just a wrapper for `xrandr` that provides a small
-subset of the functionality for the benefit of having a less cumbersome
-interface.
+`toggledisplay` is a script for basic manipulation of internal and external
+displays.  It's just a wrapper for `xrandr` that provides a small subset of
+the functionality in exchange for a less cumbersome interface.
 
 Usage
 -----
 
-    usage: toggledisplay [OPTIONS] [EXTERNAL MONITOR]
+    usage: toggledisplay [OPTIONS]
 
     OPTIONS:
        -h             Show this message
        -t             Toggle internal / external monitor
-       -m             Attempt to mirror displays
+       -m             Attempt to mirror outputs
        -d             Disconnect all external monitors, enable internal
        -e [monitors]  Use [monitors] as the list of external displays for
                       the operation
@@ -105,15 +96,16 @@ Features
 
 * Gathers the list of attached monitors
 * Toggles internal vs. external monitors
-* Mirrors displays
+* Mirrors displays (this will attempt to find the highest resolution supported
+  by both devices)
 * A `reset` option to disconnect all externals and enable the internal
 
 Examples
 --------
 
-* To mirror the internal with any external displays, run:
+* To mirror the internal with an external display named VGA1:
 
-	toggledisplay -m
+	toggledisplay -m -e VGA1
 
 * To toggle two specific monitors, HDMI1 and VGA1 with the internal display:
 
@@ -124,8 +116,9 @@ Examples
 Caveats
 -------
 
-Both scripts assume that the internal display is named `LVDS1`, although this
-can be easily changed.
+* Both scripts assume that the internal display is named `LVDS1`, although
+  this can be easily changed.
+* Currently, the mirror functionality only mirrors the first two displays.
 
 
 
