@@ -3,7 +3,7 @@
 toggledisplay_usage()
 {
 cat << EOF
-usage: toggledisplay [OPTIONS] [EXTERNAL MONITOR]
+usage: toggledisplay [OPTIONS]
 
 Provides a simple interface for toggling / mirroring external displays.
 
@@ -66,12 +66,21 @@ fi
 int="LVDS1"
 # TODO: make this configurable?
 
+# get the script path:
+spath=$(cd $(dirname $0); pwd -P)
+# NOTE: above only needed to resolve listmodes.awk
+# TODO: make listmodes.awk internal?  It is pretty short...
+
 # grab the current state of our monitors
-xrr=$(xrandr -q)
+xrr=$(xrandr -q --current)
+# NOTE: --current makes xrandr return much faster, since it does not have
+# to poll the hardware.  In my experience, polling is not necessary: e.g.,
+# if I plug in a VGA cable and then immediately run xrandr --current, the
+# newly attached VGA shows up in the list.
 
 # get the list of external monitors if it has not been provided.
 if [[ -z $externs ]]; then
-	externs=$(echo "$xrr" | awk '/\<connected\>/ {print $1}')
+	externs=$(awk '/\<connected\>/ {print $1}' <<< "$xrr")
 	# remove the internal display from the list:
 	externs=${externs//$int/}
 fi
@@ -100,22 +109,25 @@ if [[ $toggle == 1 ]]; then
 	exit
 fi
 
-# we could do something fancy for mirror, like computing the largest mode that
-# is compatible with both displays; but for now, we will just try to use the
-# "--same-as" option for xrandr, and hope for the best.
-
+# for the moment, we'll try to mirror with the first external
+# and ignore all the other ones.  A more general solution might
+# be to compute the set intersection of all externals.
 if [[ $mirror == 1 ]]; then
-	xrcmd=""
-	for ext in $externs; do
-		xrcmd="$xrcmd --output $ext --auto"
-	done
-	xrandr $xrcmd --output $int --same-as $ext
-	# TODO: we have just set the internal to mirror the last
-	# specified external monitor, but there are probably better choices.
-	# I guess this could be configurable, as well.
-	# TODO: the --same-as option refers only to the *position*, but not to the
-	# size.  To actually mirror the displays you must examine the available
-	# modes, find a match, and then set them explicitly.
+	# grab the available modes using listmodes.awk:
+	xa=($externs)
+	extmodes=$(awk -f "$spath"/listmodes.awk -v output="${xa[0]}" <<< "$xrr")
+	intmodes=$(awk -f "$spath"/listmodes.awk -v output="$int" <<< "$xrr")
+
+	# compute the intersection and select the maximal element:
+	modes=($(comm -12 <(sort <<< "$extmodes") <(sort <<< "$intmodes") | sort -gr))
+	best=${modes[0]}
+
+	# NOTE: we define the "best" match by using the width as a high-order
+	# key and the height as a low order key.  This may not yield the highest
+	# resolution in terms of the pixel count.
+
+	xrandr --output ${xa[0]} --mode $best --output $int --mode $best \
+		--same-as ${xa[0]}
 	exit
 fi
 
