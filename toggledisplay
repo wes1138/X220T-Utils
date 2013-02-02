@@ -120,6 +120,10 @@ if [[ $mirror == 1 ]]; then
 
 	# compute the intersection and select the maximal element:
 	modes=($(comm -12 <(sort <<< "$extmodes") <(sort <<< "$intmodes") | sort -gr))
+	if (( ${#modes[@]} == 0 )); then
+		echo "No compatible modes found x_x" 1>&2
+		exit 1
+	fi
 	best=${modes[0]}
 
 	# NOTE: we define the "best" match by using the width as a high-order
