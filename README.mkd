@@ -72,7 +72,7 @@ on most other tablet PC's as well (with or without trackpoint).
 ===============
 
 `toggledisplay` is a script for basic manipulation of internal and external
-displays.  It's just a wrapper for `xrandr` that provides a small subset of
+monitors.  It's just a wrapper for `xrandr` that provides a small subset of
 the functionality in exchange for a less cumbersome interface.
 
 Usage
@@ -86,7 +86,8 @@ Usage
        -m             Attempt to mirror outputs
        -d             Disconnect all external monitors, enable internal
        -e [monitors]  Use [monitors] as the list of external displays for
-                      the operation
+                      the operation (by default, all connected monitors
+                      are used)
 
     NOTE: all options are mutually exlusive, except for -e
 

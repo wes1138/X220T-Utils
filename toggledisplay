@@ -5,28 +5,29 @@ toggledisplay_usage()
 cat << EOF
 usage: toggledisplay [OPTIONS]
 
-Provides a simple interface for toggling / mirroring external displays.
+Provides a simple interface for toggling / mirroring external monitors.
 
 OPTIONS:
    -h             Show this message
    -t             Toggle internal / external monitor
-   -m             Attempt to mirror displays
+   -m             Attempt to mirror outputs
    -d             Disconnect all external monitors, enable internal
    -e [monitors]  Use [monitors] as the list of external displays for
-                  the operation
+                  the operation (by default, all connected monitors
+                  are used)
 
 NOTE: all options are mutually exlusive, except for -e
 NOTE: This script assumes that the internal display is named LVDS1
 
 EXAMPLES:
 
-* to toggle two monitors, HDMI1 and VGA1 with the internal display:
+* To mirror the internal with an external display named VGA1:
 
-	toggledisplay -t -e "HDMI1 VGA1"
+	toggledisplay -m -e VGA1
 
-* to toggle all connected external displays with the internal display:
+* To toggle two specific monitors, HDMI1 and VGA1 with the internal display:
 
-	toggledisplay -t
+	toggledisplay -t -e 'HDMI1 VGA1'
 
 EOF
 }
