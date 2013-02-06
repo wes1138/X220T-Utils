@@ -80,16 +80,25 @@ Usage
 
     usage: toggledisplay [OPTIONS]
 
+    Provides a simple interface for toggling / mirroring external monitors.
+
     OPTIONS:
        -h             Show this message
        -t             Toggle internal / external monitor
        -m             Attempt to mirror outputs
+       -a NUM         When trying to mirror, accept an approximate match
+                      which has L2 distance of up to NUM.  Defaults to 10.
+                      Note that passing -a0 will completely disable
+                      approximate matching.
        -d             Disconnect all external monitors, enable internal
-       -e [monitors]  Use [monitors] as the list of external displays for
+       -e MONITORS    Use MONITORS as the list of external displays for
                       the operation (by default, all connected monitors
                       are used)
+       -v             Verbose messages.
 
-    NOTE: all options are mutually exlusive, except for -e
+    NOTE: all options are mutually exlusive, except for -e and -a, which
+          are compatible with all other options
+
 
 
 Features
@@ -98,7 +107,7 @@ Features
 * Gathers the list of attached monitors
 * Toggles internal vs. external monitors
 * Mirrors displays (this will attempt to find the highest resolution supported
-  by both devices)
+  by both devices, and supports approximate matching)
 * A `reset` option to disconnect all externals and enable the internal
 
 Examples
@@ -119,7 +128,8 @@ Caveats
 
 * Both scripts assume that the internal display is named `LVDS1`, although
   this can be easily changed.
-* Currently, the mirror functionality only mirrors the first two displays.
+* Currently, the mirror functionality only mirrors the first external output
+  with the internal.
 
 
 

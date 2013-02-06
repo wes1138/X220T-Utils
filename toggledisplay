@@ -11,12 +11,18 @@ OPTIONS:
    -h             Show this message
    -t             Toggle internal / external monitor
    -m             Attempt to mirror outputs
+   -a NUM         When trying to mirror, accept an approximate match
+                  which has L2 distance of up to NUM.  Defaults to 10.
+                  Note that passing -a0 will completely disable
+                  approximate matching.
    -d             Disconnect all external monitors, enable internal
-   -e [monitors]  Use [monitors] as the list of external displays for
+   -e MONITORS    Use MONITORS as the list of external displays for
                   the operation (by default, all connected monitors
                   are used)
+   -v             Verbose messages.
 
-NOTE: all options are mutually exlusive, except for -e
+NOTE: all options are mutually exlusive, except for -e and -a, which
+      are compatible with all other options
 NOTE: This script assumes that the internal display is named LVDS1
 
 EXAMPLES:
@@ -32,7 +38,9 @@ EXAMPLES:
 EOF
 }
 
-while getopts "htmde:" OPTION
+sloppyness=10
+
+while getopts "htmde:a:v" OPTION
 do
 	case $OPTION in
 	h)
@@ -51,6 +59,12 @@ do
 	e)
 		externs=$OPTARG
 		;;
+	a)
+		sloppyness=$OPTARG
+		;;
+	v)
+		verbose=1
+		;;
 	?)
 		toggledisplay_usage
 		exit 0
@@ -62,6 +76,9 @@ if [[ $OPTIND == 1 ]]
 then # default to toggle.
 	toggle=1
 fi
+
+# square the error bound so we don't have to compute square roots
+sloppyness=$(($sloppyness*$sloppyness))
 
 # default internal display:
 int="LVDS1"
@@ -111,28 +128,62 @@ if [[ $toggle == 1 ]]; then
 fi
 
 # for the moment, we'll try to mirror with the first external
-# and ignore all the other ones.  A more general solution might
-# be to compute the set intersection of all externals.
+# and ignore all the other ones.
 if [[ $mirror == 1 ]]; then
 	# grab the available modes using listmodes.awk:
 	xa=($externs)
 	extmodes=$(awk -f "$spath"/listmodes.awk -v output="${xa[0]}" <<< "$xrr")
 	intmodes=$(awk -f "$spath"/listmodes.awk -v output="$int" <<< "$xrr")
 
-	# compute the intersection and select the maximal element:
-	modes=($(comm -12 <(sort <<< "$extmodes") <(sort <<< "$intmodes") | sort -gr))
-	if (( ${#modes[@]} == 0 )); then
+	# the 'preferred' (native?) mode will be marked with a '+'.
+	# save that item, and then search in the externals for it.
+	native=$(grep '+' <<< "$intmodes")
+	if (( $? != 0 )); then
+		echo "No native resolution detected.  Aborting." 1>&2
+		exit 1
+	fi
+	native=${native/ +/}
+	[[ $verbose == 1 ]] && echo "$int native resolution: $native"
+
+	if grep -q "$native" <<< "$extmodes"; then
+		[[ $verbose == 1 ]] && echo "Setting $int,${xa[0]} to $native"
+		xrandr --output ${xa[0]} --mode $native --output $int --mode $native \
+			--same-as ${xa[0]}
+		exit
+	fi
+
+	# not sure what, if any guarantees there are as to how xrandr
+	# orders the modes, so we'll sort them ourselves.
+	extmodes=$(sort -gr <<< "$extmodes")
+	intmodes=$(sort -gr <<< "$intmodes")
+	# un-elegant loop:
+	match=0
+	for n in $intmodes ; do
+		for m in $extmodes ; do
+			d0=$((${m/x*/} - ${n/x*/}))
+			d1=$((${m/*x/} - ${n/*x/}))
+			if (( $d0*$d0 + $d1*$d1 <= $sloppyness )); then
+				match=1
+				break
+			fi
+		done
+		(( $match == 1 )) && break;
+	done
+	if (( $match == 0 )); then
 		echo "No compatible modes found x_x" 1>&2
 		exit 1
 	fi
-	best=${modes[0]}
 
+	[[ $verbose == 1 ]]  && echo "Setting $int to $n and ${xa[0]} to $m"
+	xrandr --output ${xa[0]} --mode $m --output $int --mode $n \
+		--same-as ${xa[0]}
+
+	# NOTE: The -a parameter controls a trade-off between accuracy (how tight
+	# the match is) and resolution (how many columns of pixels you have).
 	# NOTE: we define the "best" match by using the width as a high-order
 	# key and the height as a low order key.  This may not yield the highest
 	# resolution in terms of the pixel count.
 
-	xrandr --output ${xa[0]} --mode $best --output $int --mode $best \
-		--same-as ${xa[0]}
 	exit
 fi
 
