@@ -104,22 +104,11 @@ do
 	esac
 done
 
-# check for no options passsed.  if this is the case, then print the usage and
-# exit.
-if [[ $OPTIND == 1 ]]
+if [[ $OPTIND == 1 ]] # no options
 then
 	tabletop_usage
 	exit 1
 fi
-
-# The following is not needed for a standalone script, but would be
-# useful if you convert this to a function:
-# unset OPTION
-# unset OPTARG
-# unset OPTSTRING
-# unset OPTIND
-# unset OPTERR
-
 
 # when verbose is specified, try to pass that flag along to all the
 # subroutines, and maybe echo some messages yourself.

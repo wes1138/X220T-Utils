@@ -11,9 +11,8 @@ X220T, for example disabling the trackpoint when in tablet mode.
 `tabletop` (*Tablet Op*tions)
 =============================
 
-`tabletop` is a simple script to control some basic **Tablet Op**tions, and
-help with common tablet PC tasks, like rotating the internal display and
-keeping the tablet input devices synchronized with the change.
+Wrapper script for `xrandr` and `xsetwacom` to control some basic **Tablet
+Op**tions.
 
 Usage
 -----
@@ -38,8 +37,7 @@ Features
 --------
 
 * Rotate or invert the internal display, and synchronize the tablet input
-  devices with the rotation. (*Note:* this happens independently of any
-  external displays, in contrast with the annoying Windows tablet software...)
+  devices with the rotation.
 * Enable / disable the finger touch (for when you're writing)
 * Map tablet events to the internal display (useful when an external monitor
   is attached which has a different resolution than the internal)
@@ -61,19 +59,11 @@ the touch back on):
 
 	tabletop -It
 
-Supported Hardware
-------------------
-
-It has only been tested on the X220T, but it is conjectured that it would work
-on most other tablet PC's as well (with or without trackpoint).
-
 
 `toggledisplay`
 ===============
 
-`toggledisplay` is a script for basic manipulation of internal and external
-monitors.  It's just a wrapper for `xrandr` that provides a small subset of
-the functionality in exchange for a less cumbersome interface.
+Wrapper for `xrandr`, making common tasks easier.
 
 Usage
 -----
@@ -130,6 +120,7 @@ Caveats
   this can be easily changed.
 * Currently, the mirror functionality only mirrors the first external output
   with the internal.
+* Very hacky.
 
 
 
