@@ -80,10 +80,6 @@ fi
 # square the error bound so we don't have to compute square roots
 sloppyness=$(($sloppyness*$sloppyness))
 
-# default internal display:
-int="LVDS1"
-# TODO: make this configurable?
-
 # get the script path:
 spath=$(cd $(dirname $0); pwd -P)
 # NOTE: above only needed to resolve listmodes.awk
@@ -95,6 +91,11 @@ xrr=$(xrandr -q --current)
 # to poll the hardware.  In my experience, polling is not necessary: e.g.,
 # if I plug in a VGA cable and then immediately run xrandr --current, the
 # newly attached VGA shows up in the list.
+
+# find internal display.  we'll use the first LVDS* unless overriden.
+if [[ -z "$int" ]]; then
+	int=$(awk '/\<connected\>/ {print $1}' <<< "$xrr" | grep "LVDS" | head -1)
+fi
 
 # get the list of external monitors if it has not been provided.
 if [[ -z $externs ]]; then
@@ -116,7 +117,7 @@ fi
 cmds=( --off --auto )
 if [[ $toggle == 1 ]]; then
 	# figure out if the internal is on, and set the command based on that.
-	( echo "$xrr" | grep "$int" | grep -q "+" ) && k=1 || k=0
+	grep "$int" <<<"$xrr" | grep -q "+"  && k=1 || k=0
 
 	xrcmd=""
 	for ext in $externs; do
